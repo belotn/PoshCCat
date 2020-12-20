@@ -9,19 +9,28 @@
 ######################################################################
 # Note / TODO and FIXME                                              #
 # TODO: Guess delimiter in CsvColor function                         #
+# TODO: Add Guess File content, file Type function                   # 
 ######################################################################
 
 $CSVColors = @("Blue","Green","Red","Yellow","Orange")
 $CSVDelimColor = "Purple"
 function Get-ColorizedContent {
     param(
-        [string]$FilePath
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({
+            if( (Test-Path $_ |? { $_ -ne $true} -gt 0)){
+                Throw [System.IO.FileNotFoundException]
+            }else{
+                return $true
+            }
+        })]
+        [string[]]$Path
     )
-    $file = get-item $FilePath
-    if($file.Extension -eq '.csv'){
-        return CsvColor -FilePath $FilePath
+    [System.IO.FileInfo]$File = (Resolve-Path  $Path).Path
+    if($File.Extension -eq '.csv'){
+        return CsvColor -FilePath $File
     } else {
-        return Get-Content -path $FilePath
+        return Get-Content -path $File
     }
 }
 
