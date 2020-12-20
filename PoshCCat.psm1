@@ -4,6 +4,12 @@
 # Description : contains main function and utilities                 #
 #                                                                    #  
 ######################################################################
+# Changelog :                                                        # 
+# 20201218 Initial realease                                          # 
+######################################################################
+# Note / TODO and FIXME                                              #
+# TODO: Guess delimiter in CsvColor function                         #
+######################################################################
 
 $CSVColors = @("Blue","Green","Red","Yellow","Orange")
 $CSVDelimColor = "Purple"
@@ -22,21 +28,22 @@ function Get-ColorizedContent {
 ######################################################################
 # function CsvColor                                                  #
 ######################################################################
-# TODO: Guess Delim                                                  #
+# Description : Format CSV based on csv color array                  # 
 ######################################################################
 
 function CsvColor {
     param(
         [string]$FilePath
     )
-   $csv  = import-csv -delim ';' -Path $FilePath 
-   #header
-   $i=0
-   @($csv[0].psobject.Properties.Name |% { $i++; New-Text $_ -ForegroundColor $CSVColors[$i%5] -LeaveColor} ) -join (new-text ';' -ForegroundColor $CSVDelimColori -LeaveColor)
-   $csv |% {
+    $MaxColor = $CSVColors.Count
+    $csv  = import-csv -delim ';' -Path $FilePath 
+    #header
     $i=0
-    @($_.psobject.Properties.Value |% { $i++; New-Text $_ -ForegroundColor $CSVColors[$i%5] -LeaveColor } ) -join (new-text ';' -ForegroundColor $CSVDelimColor -LeaveColor)
-   }
+    @($csv[0].psobject.Properties.Name |% { $i++; New-Text $_ -ForegroundColor $CSVColors[$i%$MaxColor] -LeaveColor} ) -join (new-text ';' -ForegroundColor $CSVDelimColori -LeaveColor)
+    $csv |% {
+        $i=0
+        @($_.psobject.Properties.Value |% { $i++; New-Text $_ -ForegroundColor $CSVColors[$i%$MaxColor] -LeaveColor } ) -join (new-text ';' -ForegroundColor $CSVDelimColor -LeaveColor)
+    }
 }
 
 Export-ModuleMember -Function "Get-ColorizedContent"
