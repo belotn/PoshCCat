@@ -1,3 +1,4 @@
+#requires -Modules Pansies
 ######################################################################
 # Module : PoshCCat.psm1                                             #
 ######################################################################
@@ -18,6 +19,10 @@ $LogColors = @{
     DateTimeFrontColor = "Blue"
     ErrorFrontColor = "Red"
     WarningFrontColor = "Yellow"
+    HexWordFrontColor = "Green"
+    SIDFrontColor = "LightGreen"
+    GuIDFrontColor = "DarkGreen"
+    IPv4FrontColor = "Orange"
 }
 
 function Get-ColorizedContent {
@@ -74,18 +79,41 @@ function LogColor {
     param(
         [string]$FilePath
     )
-    $DateTimeRegexp = "(\d{1,2}[/\- ]\d{1,2}[/\- ]\d{2,4}|\d{8}|\d{2,4}[/\- ]\d{1,2}[/\- ]\d{1,2})"
+    $DateRegexp = "(\d{1,2}[/\- ]\d{1,2}[/\- ]\d{2,4}|20\d{6}|\d{2,4}[/\- ]\d{1,2}[/\- ]\d{1,2}|\d{2}-\w{3}-\d{4})"
+    $TimeRegexp = "(\d{1,2}[:]\d{1,2}[:]\d{1,2}\.?\d*)"
+    $HexWordRegexp = "(?<HexWord>0x[0-9a-eA-E]{4,8})"
+    $PathRegexp = "(?<Before>\W)(?<Path>(\w:[/\\]?|\\\\|//)[\w\\/\- \.$]+(\.[\w]+)?)"
+    $SIDRegex = "(?<SID>S-\d-(?:\d+-){1,14}\d+)"
+    $GuIDRegex = "(?<GUID>[A-Z0-9]{8}-([A-Z0-9]{4}-){3}[A-Z0-9]{12})"
+    $IPv4Regex = "(?<IPV4>([^1-9.][1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3} )"
     Get-Content $FilePath |% {
         $line = $_
-        if( $_ -match $DateTimeRegexp){ 
+        if( $_ -match $DateRegexp){ 
             $matches.Values | group |% {
                 $line = $line.replace($_.Name, (New-Text -ForegroundColor $LogColors.DateTimeFrontColor -Object $_.Name ).toString() )
             }
         }
-        $line = $line -replace "(?<Match>Error)",(new-text '${Match}' -ForegroundColor $LogColors.ErrorFrontColor).toString()
-        $line = $line -replace "(?<Match>Warning)",(new-text '${Match}' -ForegroundColor $Logcolors.WarningFrontColor).toString()
+        if( $_ -match $TimeRegexp){ 
+            $matches.Values | group |% {
+                $line = $line.replace($_.Name, (New-Text -ForegroundColor $LogColors.DateTimeFrontColor -Object $_.Name ).toString() )
+            }
+        }
+        $line = $line -replace $HexWordRegexp,(new-text '${HexWord}' -ForegroundColor $LogColors.HexWordFrontColor ).toString()
+        $line = $line -replace $PathRegexp,('${Before}' + (New-UnderlineText '${Path}' ))
+        $line = $line -replace $SIDRegex, (new-text '${SID}' -ForegroundColor $logColors.SIDFrontColor )
+        $line = $line -replace $GuIDRegex, (new-text '${GUID}' -ForegroundColor $logColors.GuIDFrontColor )
+        $line = $line -replace $IPv4Regex, (new-text '${IPV4}' -ForegroundColor $logColors.IPv4FrontColor )
+        $line = $line -replace "(?<Match>Error)",(new-text '${Match}' -ForegroundColor $LogColors.ErrorFrontColor ).toString()
+        $line = $line -replace "(?<Match>Warning)",(new-text '${Match}' -ForegroundColor $Logcolors.WarningFrontColor ).toString()
         $line
     }
+}
+
+function New-UnderlineText {
+    param(
+        [string]$text
+    )
+    return "$([char]27)[4m$text$([char]27)[24m"
 }
 
 Export-ModuleMember -Function "Get-ColorizedContent"
