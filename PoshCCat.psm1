@@ -14,6 +14,12 @@
 
 $CSVColors = @("Blue","Green","Red","Yellow","Orange")
 $CSVDelimColor = "Purple"
+$LogColors = @{
+    DateTimeFrontColor = "Blue"
+    ErrorFrontColor = "Red"
+    WarningFrontColor = "Yellow"
+}
+
 function Get-ColorizedContent {
     param(
         [Parameter(Mandatory = $true)]
@@ -29,7 +35,9 @@ function Get-ColorizedContent {
     [System.IO.FileInfo]$File = (Resolve-Path  $Path).Path
     if($File.Extension -eq '.csv'){
         return CsvColor -FilePath $File
-    } else {
+    } elseif( $File.Extension -eq '.log') {
+        return LogColor -FilePath $File
+    }else {
         return Get-Content -path $File
     }
 }
@@ -53,6 +61,30 @@ function CsvColor {
     $csv |% {
         $i=0
         @($_.psobject.Properties.Value |% { $i++; New-Text $_ -ForegroundColor $CSVColors[$i%$MaxColor] -LeaveColor } ) -join (new-text $Delimiter -ForegroundColor $CSVDelimColor -LeaveColor)
+    }
+}
+
+######################################################################
+# function LogColor                                                  #
+######################################################################
+# Description : Format Log File based on Logcolors Hash              # 
+######################################################################
+
+function LogColor {
+    param(
+        [string]$FilePath
+    )
+    $DateTimeRegexp = "(\d{1,2}[/\- ]\d{1,2}[/\- ]\d{2,4}|\d{8}|\d{2,4}[/\- ]\d{1,2}[/\- ]\d{1,2})"
+    Get-Content $FilePath |% {
+        $line = $_
+        if( $_ -match $DateTimeRegexp){ 
+            $matches.Values | group |% {
+                $line = $line.replace($_.Name, (New-Text -ForegroundColor $LogColors.DateTimeFrontColor -Object $_.Name ).toString() )
+            }
+        }
+        $line = $line -replace "(?<Match>Error)",(new-text '${Match}' -ForegroundColor $LogColors.ErrorFrontColor).toString()
+        $line = $line -replace "(?<Match>Warning)",(new-text '${Match}' -ForegroundColor $Logcolors.WarningFrontColor).toString()
+        $line
     }
 }
 
