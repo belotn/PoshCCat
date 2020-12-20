@@ -11,6 +11,7 @@
 # Note / TODO and FIXME                                              #
 # TODO: Guess delimiter in CsvColor function DONE/                   #
 # TODO: Add Guess File content, file Type function                   # 
+# TODO: USe CmdLet Binding                                           # 
 ######################################################################
 
 $CSVColors = @("Blue", "Green", "Red", "Yellow", "Orange")
