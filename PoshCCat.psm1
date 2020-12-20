@@ -12,6 +12,7 @@
 # TODO: Guess delimiter in CsvColor function DONE/                   #
 # TODO: Add Guess File content, file Type function                   # 
 # TODO: USe CmdLet Binding                                           # 
+# TODO: Add Critical and Panic Keywords                              # 
 ######################################################################
 
 $CSVColors = @("Blue", "Green", "Red", "Yellow", "Orange")
@@ -122,8 +123,8 @@ function Set-CCarColor {
         [string[]]$CSVColors
     )
 }
-
-Export-ModuleMember -Function "Get-ColorizedContent"
+Set-Alias -Name "ccat" -Value "Get-ColorizedContent"
+Export-ModuleMember -Function "Get-ColorizedContent" -Alias "ccat"
 
 ######################################################################
 # Analyze                                                            #
