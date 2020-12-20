@@ -8,7 +8,7 @@
 # 20201218 Initial realease                                          # 
 ######################################################################
 # Note / TODO and FIXME                                              #
-# TODO: Guess delimiter in CsvColor function                         #
+# TODO: Guess delimiter in CsvColor function DONE/                   #
 # TODO: Add Guess File content, file Type function                   # 
 ######################################################################
 
@@ -45,13 +45,14 @@ function CsvColor {
         [string]$FilePath
     )
     $MaxColor = $CSVColors.Count
-    $csv  = import-csv -delim ';' -Path $FilePath 
+    $Delimiter =  ((Get-Content -Path $FilePath)[0].ToCharArray() | group |? { ":",";",",","`t" -contains $_.Name } | sort Count | select -first 1 ).Name
+    $csv  = import-csv -delim $Delimiter -Path $FilePath 
     #header
     $i=0
-    @($csv[0].psobject.Properties.Name |% { $i++; New-Text $_ -ForegroundColor $CSVColors[$i%$MaxColor] -LeaveColor} ) -join (new-text ';' -ForegroundColor $CSVDelimColori -LeaveColor)
+    @($csv[0].psobject.Properties.Name |% { $i++; New-Text $_ -ForegroundColor $CSVColors[$i%$MaxColor] -LeaveColor} ) -join (new-text $Delimiter  -ForegroundColor $CSVDelimColori -LeaveColor)
     $csv |% {
         $i=0
-        @($_.psobject.Properties.Value |% { $i++; New-Text $_ -ForegroundColor $CSVColors[$i%$MaxColor] -LeaveColor } ) -join (new-text ';' -ForegroundColor $CSVDelimColor -LeaveColor)
+        @($_.psobject.Properties.Value |% { $i++; New-Text $_ -ForegroundColor $CSVColors[$i%$MaxColor] -LeaveColor } ) -join (new-text $Delimiter -ForegroundColor $CSVDelimColor -LeaveColor)
     }
 }
 
