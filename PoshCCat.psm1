@@ -12,7 +12,7 @@
 # TODO: Guess delimiter in CsvColor function DONE/                   #
 # TODO: Add Guess File content, file Type function                   # 
 # TODO: USe CmdLet Binding                                           # 
-# TODO: Add Critical and Panic Keywords                              # 
+# TODO: should add uri in path                                       # 
 ######################################################################
 
 $CSVColors = @("Blue", "Green", "Red", "Yellow", "Orange")
@@ -31,6 +31,15 @@ $IniColors = @{
     SectionFrontColor  = "Green"
     VariableFrontColor = "LightGreen"
     ValueFrontColor    = "darkOrange"
+}
+$HostColors = @{
+    CommentFrontColor = "Blue"
+    IpV4FrontColor    = "LightGreen"
+    HostFrontColor    = "darkOrange"
+    ServiceFrontColor = "darkorange"
+    AliasFrontColor   = "darkORange"
+    PortFrontColor    = "lightGreen"
+    ProtoFrontColor   = "lightGreen"
 }
 
 function Get-ColorizedContent {
@@ -52,6 +61,10 @@ function Get-ColorizedContent {
         return LogColor -FilePath $File
     } elseif ( $File.Extension -eq '.ini') {
         return IniColor -FilePath $File
+    } elseif ($File.FullName -eq 'C:\WINDOWS\System32\drivers\etc\hosts') {
+        return HostColor -FilePath $File
+    } elseif ($File.FullName -eq 'C:\WINDOWS\System32\drivers\etc\services') {
+        return ServiceColor -FilePath $File
     } else {
         return Get-Content -Path $File
     }
@@ -140,6 +153,44 @@ function IniColor {
     }
 }
 
+######################################################################
+# function HostColor                                                 #
+######################################################################
+# Description : Format Host File based on Inicolors Hash              # 
+######################################################################
+function HostColor {
+    param(
+        [string]$FilePath
+    )
+    $CommentRegexp = "(?<Comment>#.*$)"
+    $HostRegexp = "(?<IPV4>([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3})(?<Hostname>\s+.*)"
+    Get-Content $FilePath -Encoding UTF8 | % {
+        $line = $_
+        $line = $line -replace $CommentRegexp, (New-Text '${Comment}' -ForegroundColor $HostColors.CommentFrontColor).toString()
+        if ( $line.length -gt 0 -and $line.substring(0, 1) -ne '#') {
+            $line = $line -replace $HostRegexp, ((New-Text '${IPV4}' -ForegroundColor $HostColors.IPv4FrontColor).ToString() + (New-Text '${Hostname}' -ForegroundColor $HostColors.HostFrontColor).toString() )
+        }
+        $line
+    }
+}
+######################################################################
+# function ServiceColor                                                 #
+######################################################################
+# Description : Format Service File based on Inicolors Hash              # 
+######################################################################
+function ServiceColor {
+    param(
+        [string]$FilePath
+    )
+    $ServiceRegexp = "(?<Service>[\w\-]+\s+)(?<Port>\d+)(?<Proto>/(tcp|udp))(?<Alias>\s*[\w \-]*)"
+    $CommentRegexp = "(?<Comment>#.*$)"
+    Get-Content $FilePath -Encoding UTF8 | % {
+        $line = $_
+        $line = $line -replace $CommentRegexp, (New-Text '${Comment}' -ForegroundColor $HostColors.CommentFrontColor).toString()
+        $line = $line -replace $ServiceRegexp, ((New-Text '${Service}' -ForegroundColor $HostColors.ServiceFrontColor).toString() + (New-Text '${Port}' -ForegroundColor $HostColors.PortFrontColor).toString() + (New-Text '${Proto}' -ForegroundColor $HostColors.ProtoFrontColor).toString() + (New-Text '${Alias}' -ForegroundColor $HostColors.AliasFrontColor).toString())
+        $line
+    }
+}
 function New-UnderlineText {
     param(
         [string]$text
@@ -158,7 +209,7 @@ Export-ModuleMember -Function "Get-ColorizedContent" -Alias "ccat"
 ######################################################################
 # Analyze                                                            #
 ######################################################################
-# PSAvoidUsingCmdletAliases occured 14                               #
+# PSAvoidUsingCmdletAliases occured 16                               #
 # PSReviewUnusedParameter occured 1                                  #
 # PSUseShouldProcessForStateChangingFunctions occured 2              #
 ######################################################################
