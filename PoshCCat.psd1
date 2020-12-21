@@ -1,9 +1,9 @@
 #
-# Manifeste de module pour le module « PoshCCat »
+# Manifeste de module pour le module « PSGet_PoshCCat »
 #
 # Généré par : Karrakis
 #
-# Généré le : 19/12/2020
+# Généré le : 21/12/2020
 #
 
 @{
@@ -30,7 +30,7 @@
     Copyright         = '(c) 2020 Karrakis. Tous droits réservés.'
 
     # Description de la fonctionnalité fournie par ce module
-    # Description = ''
+    Description       = 'Like oh-my-zsh colorize allow to have a colorized version of get-content.'
 
     # Version minimale du moteur Windows PowerShell requise par ce module
     # PowerShellVersion = ''
@@ -51,7 +51,7 @@
     # ProcessorArchitecture = ''
 
     # Modules qui doivent être importés dans l'environnement global préalablement à l'importation de ce module
-    # RequiredModules = @()
+    RequiredModules   = @("Pansies")
 
     # Assemblys qui doivent être chargés préalablement à l'importation de ce module
     # RequiredAssemblies = @()
@@ -69,16 +69,16 @@
     # NestedModules = @()
 
     # Fonctions à exporter à partir de ce module. Pour de meilleures performances, n’utilisez pas de caractères génériques et ne supprimez pas l’entrée. Utilisez un tableau vide si vous n’avez aucune fonction à exporter.
-    FunctionsToExport = @("Get-ColorizedContent")
+    FunctionsToExport = 'Get-ColorizedContent'
 
     # Applets de commande à exporter à partir de ce module. Pour de meilleures performances, n’utilisez pas de caractères génériques et ne supprimez pas l’entrée. Utilisez un tableau vide si vous n’avez aucune applet de commande à exporter.
     CmdletsToExport   = @()
 
     # Variables à exporter à partir de ce module
-    VariablesToExport = '*'
+    # VariablesToExport = @()
 
     # Alias à exporter à partir de ce module. Pour de meilleures performances, n’utilisez pas de caractères génériques et ne supprimez pas l’entrée. Utilisez un tableau vide si vous n’avez aucun alias à exporter.
-    AliasesToExport   = @("ccat")
+    AliasesToExport   = 'ccat'
 
     # Ressources DSC à exporter depuis ce module
     # DscResourcesToExport = @()
@@ -87,31 +87,34 @@
     # ModuleList = @()
 
     # Liste de tous les fichiers empaquetés avec ce module
-    FileList          = @("PoshCCat.psm1")
+    FileList          = 'PoshCCat.psm1'
 
     # Données privées à transmettre au module spécifié dans RootModule/ModuleToProcess. Cela peut également inclure une table de hachage PSData avec des métadonnées de modules supplémentaires utilisées par PowerShell.
     PrivateData       = @{
 
         PSData = @{
 
-            # Des balises ont été appliquées à ce module. Elles facilitent la découverte des modules dans les galeries en ligne.
+            # Tags applied to this module. These help with module discovery in online galleries.
             # Tags = @()
 
-            # URL vers la licence de ce module.
+            # A URL to the license for this module.
             # LicenseUri = ''
 
-            # URL vers le site web principal de ce projet.
-            # ProjectUri = ''
+            # A URL to the main website for this project.
+            ProjectUri = 'https://github.com/belotn/PoshCCat'
 
-            # URL vers une icône représentant ce module.
+            # A URL to an icon representing this module.
             # IconUri = ''
 
-            # Propriété ReleaseNotes de ce module
+            # ReleaseNotes of this module
             # ReleaseNotes = ''
 
-        } # Fin de la table de hachage PSData
+            # External dependent modules of this module
+            # ExternalModuleDependencies = ''
 
-    } # Fin de la table de hachage PrivateData
+        } # End of PSData hashtable
+    
+    } # End of PrivateData hashtable
 
     # URI HelpInfo de ce module
     # HelpInfoURI = ''
