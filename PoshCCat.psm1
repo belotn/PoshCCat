@@ -26,6 +26,12 @@ $LogColors = @{
     GuIDFrontColor     = "DarkGreen"
     IPv4FrontColor     = "Orange"
 }
+$IniColors = @{
+    CommentFrontColor  = "Blue"
+    SectionFrontColor  = "Green"
+    VariableFrontColor = "LightGreen"
+    ValueFrontColor    = "darkOrange"
+}
 
 function Get-ColorizedContent {
     param(
@@ -44,6 +50,8 @@ function Get-ColorizedContent {
         return CsvColor -FilePath $File
     } elseif ( $File.Extension -eq '.log') {
         return LogColor -FilePath $File
+    } elseif ( $File.Extension -eq '.ini') {
+        return IniColor -FilePath $File
     } else {
         return Get-Content -Path $File
     }
@@ -110,6 +118,27 @@ function LogColor {
         $line
     }
 }
+######################################################################
+# function IniColor                                                  #
+######################################################################
+# Description : Format Ini File based on Inicolors Hash              # 
+######################################################################
+
+function IniColor {
+    param(
+        [string]$FilePath
+    )
+    $CommentRegexp = "(?<Comment>[#;].*)$"
+    $SectionRegexp = "(?<Section>\[[^]]+\])"
+    $VariableValueRegexp = "(?<Variable>\w+\s?)=(?<Value>\s?[^;#]+)"
+    Get-Content $FilePath | % {
+        $line = $_
+        $line = $line -replace $CommentRegexp, (New-Text '${Comment}' -ForegroundColor $IniColors.CommentFrontColor).toString()
+        $line = $line -replace $SectionRegexp, (New-Text '${Section}' -ForegroundColor $IniColors.SectionFrontColor).toString()
+        $line = $line -replace $VariableValueRegexp, ((New-Text '${Variable}' -ForegroundColor $IniColors.VariableFrontColor).toString() + '=' + (New-Text '${Value}' -ForegroundColor $IniColors.ValueFrontColor).tostring() )
+        $line
+    }
+}
 
 function New-UnderlineText {
     param(
@@ -129,7 +158,7 @@ Export-ModuleMember -Function "Get-ColorizedContent" -Alias "ccat"
 ######################################################################
 # Analyze                                                            #
 ######################################################################
-# PSAvoidUsingCmdletAliases occured 13                               #
+# PSAvoidUsingCmdletAliases occured 14                               #
 # PSReviewUnusedParameter occured 1                                  #
 # PSUseShouldProcessForStateChangingFunctions occured 2              #
 ######################################################################
