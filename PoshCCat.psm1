@@ -14,6 +14,7 @@
 # TODO: USe CmdLet Binding                                           # 
 # TODO: should add uri in path                                       # 
 # FIXME: Comment can be colorize with content highlighting           #
+# TODO: Rename "IniColors" to ConfigurationColors                    #
 ######################################################################
 
 $CSVColors = @("Blue", "Green", "Red", "Yellow", "Orange")
@@ -62,6 +63,8 @@ function Get-ColorizedContent {
         return LogColor -FilePath $File
     } elseif ( $File.Extension -eq '.ini' -or $File.Extension -eq '.inf') {
         return IniColor -FilePath $File
+    } elseif ( $File.Extension -eq '.conf' -or $File.Extension -eq '.cfg') {
+        return ConfigFileColor -FilePath $File
     } elseif ($File.FullName -eq 'C:\WINDOWS\System32\drivers\etc\hosts') {
         return HostColor -FilePath $File
     } elseif ($File.FullName -eq 'C:\WINDOWS\System32\drivers\etc\services') {
@@ -175,9 +178,9 @@ function HostColor {
     }
 }
 ######################################################################
-# function ServiceColor                                                 #
+# function ServiceColor                                              #
 ######################################################################
-# Description : Format Service File based on Inicolors Hash              # 
+# Description : Format Service File based on Inicolors Hash          # 
 ######################################################################
 function ServiceColor {
     param(
@@ -192,6 +195,32 @@ function ServiceColor {
         $line
     }
 }
+
+######################################################################
+# function ConfigFileColor                                           #
+######################################################################
+# Description : Format Service File based on Inicolors Hash          # 
+######################################################################
+function ConfigFileColor {
+    param(
+        [string]$FilePath
+    ) 
+    $CommentRegexp = "(?<Comment>#.*)"
+    $SectionRegexp = "(?<Section>^\w+$)"
+    $AssignRegexp = "(?<Name>^\s*[\w-]+)(?<Value>\s+[^#]+)"
+    $BlockStartRegexp = "(?<Start>^\s*\w+\s*{)"
+    $BlockStopRegexp = "(?<Stop>})"
+    Get-Content $FilePath | % {
+        $line = $_
+        $line = $line -replace $CommentRegexp, (New-Text '${Comment}' -ForegroundColor $IniColors.CommentFrontColor).ToString()
+        $line = $line -replace $SectionRegexp, (New-Text '${Section}' -ForegroundColor $IniColors.SectionFrontColor).ToString()
+        $line = $line -replace $AssignRegexp, ((New-Text '${Name}' -ForegroundColor $IniColors.VariableFrontColor).ToString() + (New-Text '${Value}' -ForegroundColor $IniColors.ValueFrontColor).toString() )
+        $line = $line -replace $BlockStartRegexp, (New-Text '${Start}' -ForegroundColor $IniColors.SectionFrontColor).ToString()
+        $line = $line -replace $BlockStopRegexp, (New-Text '${Stop}' -ForegroundColor $IniColors.SectionFrontColor).ToString()
+        $line
+    }
+}
+
 function New-UnderlineText {
     param(
         [string]$text
@@ -210,7 +239,7 @@ Export-ModuleMember -Function "Get-ColorizedContent" -Alias "ccat"
 ######################################################################
 # Analyze                                                            #
 ######################################################################
-# PSAvoidUsingCmdletAliases occured 16                               #
+# PSAvoidUsingCmdletAliases occured 17                               #
 # PSReviewUnusedParameter occured 1                                  #
 # PSUseShouldProcessForStateChangingFunctions occured 2              #
 ######################################################################
