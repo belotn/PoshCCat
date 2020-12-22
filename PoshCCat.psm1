@@ -13,7 +13,7 @@
 # TODO: Add Guess File content, file Type function                   # 
 # TODO: USe CmdLet Binding                                           # 
 # TODO: should add uri in path                                       # 
-# FIXME: Comment can be colorize with content highlighting           #
+# FIXME: Comment can be colorize with content highlighting FIXED/    #
 # TODO: Rename "IniColors" to ConfigurationColors                    #
 ######################################################################
 
@@ -167,7 +167,7 @@ function HostColor {
         [string]$FilePath
     )
     $CommentRegexp = "(?<Comment>#.*$)"
-    $HostRegexp = "(?<IPV4>([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3})(?<Hostname>\s+.*)"
+    $HostRegexp = "(?<IPV4>^\s*([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3})(?<Hostname>\s+.*)"
     Get-Content $FilePath -Encoding UTF8 | % {
         $line = $_
         $line = $line -replace $CommentRegexp, (New-Text '${Comment}' -ForegroundColor $HostColors.CommentFrontColor).toString()
