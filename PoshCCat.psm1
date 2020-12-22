@@ -13,6 +13,7 @@
 # TODO: Add Guess File content, file Type function                   # 
 # TODO: USe CmdLet Binding                                           # 
 # TODO: should add uri in path                                       # 
+# FIXME: Comment can be colorize with content highlighting           #
 ######################################################################
 
 $CSVColors = @("Blue", "Green", "Red", "Yellow", "Orange")
@@ -59,7 +60,7 @@ function Get-ColorizedContent {
         return CsvColor -FilePath $File
     } elseif ( $File.Extension -eq '.log') {
         return LogColor -FilePath $File
-    } elseif ( $File.Extension -eq '.ini') {
+    } elseif ( $File.Extension -eq '.ini' -or $File.Extension -eq '.inf') {
         return IniColor -FilePath $File
     } elseif ($File.FullName -eq 'C:\WINDOWS\System32\drivers\etc\hosts') {
         return HostColor -FilePath $File
@@ -143,7 +144,7 @@ function IniColor {
     )
     $CommentRegexp = "(?<Comment>[#;].*)$"
     $SectionRegexp = "(?<Section>\[[^]]+\])"
-    $VariableValueRegexp = "(?<Variable>\w+\s?)=(?<Value>\s?[^;#]+)"
+    $VariableValueRegexp = "(?<Variable>[\w.*%$-]+\s*)=(?<Value>\s*[^;#]+)" #"(?<Variable>[\w+.\-*]\s*)=(?<Value>\s*[^;#]+)"
     Get-Content $FilePath | % {
         $line = $_
         $line = $line -replace $CommentRegexp, (New-Text '${Comment}' -ForegroundColor $IniColors.CommentFrontColor).toString()
