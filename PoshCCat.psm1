@@ -61,7 +61,7 @@ function Get-ColorizedContent {
         return CsvColor -FilePath $File
     } elseif ( $File.Extension -eq '.log') {
         return LogColor -FilePath $File
-    } elseif ( $File.Extension -eq '.ini' -or $File.Extension -eq '.inf') {
+    } elseif ( $File.Extension -eq '.ini' -or $File.Extension -eq '.inf' -or $File.Extension -eq '.ica') {
         return IniColor -FilePath $File
     } elseif ( $File.Extension -eq '.conf' -or $File.Extension -eq '.cfg') {
         return ConfigFileColor -FilePath $File
@@ -150,7 +150,7 @@ function IniColor {
     )
     $CommentRegexp = "(?<Comment>[#;].*)$"
     $SectionRegexp = "(?<Section>\[[^]]+\])"
-    $VariableValueRegexp = "(?<Variable>[\w.*%$-]+\s*)=(?<Value>\s*[^;#]+)" #"(?<Variable>[\w+.\-*]\s*)=(?<Value>\s*[^;#]+)"
+    $VariableValueRegexp = "(?<Variable>[\w.*%$-]+\s*)=(?<Value>\s*[^;#]*)" #"(?<Variable>[\w+.\-*]\s*)=(?<Value>\s*[^;#]+)"
     Get-Content $FilePath | % {
         $line = $_
         $line = $line -replace $CommentRegexp, (New-Text '${Comment}' -ForegroundColor $ConfigurationColors.CommentFrontColor).toString()
