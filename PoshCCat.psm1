@@ -76,7 +76,6 @@ function Get-ColorizedContent {
     } elseif ( $File.Extension -eq '.reg') {
         return RegistryFileColor -FilePath $File
     } elseif ($File.FullName -eq 'C:\WINDOWS\System32\drivers\etc\hosts') {
-    } elseif ($File.FullName -eq 'C:\WINDOWS\System32\drivers\etc\hosts') {
         return HostColor -FilePath $File
     } elseif ($File.FullName -eq 'C:\WINDOWS\System32\drivers\etc\services') {
         return ServiceColor -FilePath $File
