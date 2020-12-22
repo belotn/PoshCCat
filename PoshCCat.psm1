@@ -28,7 +28,7 @@ $LogColors = @{
     GuIDFrontColor     = "DarkGreen"
     IPv4FrontColor     = "Orange"
 }
-$IniColors = @{
+$ConfigurationColors = @{
     CommentFrontColor  = "Blue"
     SectionFrontColor  = "Green"
     VariableFrontColor = "LightGreen"
@@ -150,9 +150,9 @@ function IniColor {
     $VariableValueRegexp = "(?<Variable>[\w.*%$-]+\s*)=(?<Value>\s*[^;#]+)" #"(?<Variable>[\w+.\-*]\s*)=(?<Value>\s*[^;#]+)"
     Get-Content $FilePath | % {
         $line = $_
-        $line = $line -replace $CommentRegexp, (New-Text '${Comment}' -ForegroundColor $IniColors.CommentFrontColor).toString()
-        $line = $line -replace $SectionRegexp, (New-Text '${Section}' -ForegroundColor $IniColors.SectionFrontColor).toString()
-        $line = $line -replace $VariableValueRegexp, ((New-Text '${Variable}' -ForegroundColor $IniColors.VariableFrontColor).toString() + '=' + (New-Text '${Value}' -ForegroundColor $IniColors.ValueFrontColor).tostring() )
+        $line = $line -replace $CommentRegexp, (New-Text '${Comment}' -ForegroundColor $ConfigurationColors.CommentFrontColor).toString()
+        $line = $line -replace $SectionRegexp, (New-Text '${Section}' -ForegroundColor $ConfigurationColors.SectionFrontColor).toString()
+        $line = $line -replace $VariableValueRegexp, ((New-Text '${Variable}' -ForegroundColor $ConfigurationColors.VariableFrontColor).toString() + '=' + (New-Text '${Value}' -ForegroundColor $ConfigurationColors.ValueFrontColor).tostring() )
         $line
     }
 }
@@ -212,11 +212,11 @@ function ConfigFileColor {
     $BlockStopRegexp = "(?<Stop>})"
     Get-Content $FilePath | % {
         $line = $_
-        $line = $line -replace $CommentRegexp, (New-Text '${Comment}' -ForegroundColor $IniColors.CommentFrontColor).ToString()
-        $line = $line -replace $SectionRegexp, (New-Text '${Section}' -ForegroundColor $IniColors.SectionFrontColor).ToString()
-        $line = $line -replace $AssignRegexp, ((New-Text '${Name}' -ForegroundColor $IniColors.VariableFrontColor).ToString() + (New-Text '${Value}' -ForegroundColor $IniColors.ValueFrontColor).toString() )
-        $line = $line -replace $BlockStartRegexp, (New-Text '${Start}' -ForegroundColor $IniColors.SectionFrontColor).ToString()
-        $line = $line -replace $BlockStopRegexp, (New-Text '${Stop}' -ForegroundColor $IniColors.SectionFrontColor).ToString()
+        $line = $line -replace $CommentRegexp, (New-Text '${Comment}' -ForegroundColor $ConfigurationColors.CommentFrontColor).ToString()
+        $line = $line -replace $SectionRegexp, (New-Text '${Section}' -ForegroundColor $ConfigurationColors.SectionFrontColor).ToString()
+        $line = $line -replace $AssignRegexp, ((New-Text '${Name}' -ForegroundColor $ConfigurationColors.VariableFrontColor).ToString() + (New-Text '${Value}' -ForegroundColor $ConfigurationColors.ValueFrontColor).toString() )
+        $line = $line -replace $BlockStartRegexp, (New-Text '${Start}' -ForegroundColor $ConfigurationColors.SectionFrontColor).ToString()
+        $line = $line -replace $BlockStopRegexp, (New-Text '${Stop}' -ForegroundColor $ConfigurationColors.SectionFrontColor).ToString()
         $line
     }
 }
