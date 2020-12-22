@@ -65,6 +65,9 @@ function Get-ColorizedContent {
         return IniColor -FilePath $File
     } elseif ( $File.Extension -eq '.conf' -or $File.Extension -eq '.cfg') {
         return ConfigFileColor -FilePath $File
+    } elseif ( $File.Extension -eq '.reg') {
+        return RegistryFileColor -FilePath $File
+    } elseif ($File.FullName -eq 'C:\WINDOWS\System32\drivers\etc\hosts') {
     } elseif ($File.FullName -eq 'C:\WINDOWS\System32\drivers\etc\hosts') {
         return HostColor -FilePath $File
     } elseif ($File.FullName -eq 'C:\WINDOWS\System32\drivers\etc\services') {
@@ -221,6 +224,26 @@ function ConfigFileColor {
     }
 }
 
+######################################################################
+# function RegistryFileColor                                         #
+######################################################################
+# Description : Format Registry File based on Regcolors Hash         # 
+######################################################################
+function RegistryFileColor {
+    param(
+        [string]$FilePath
+    )
+    $KeyRegexp = "(?<Key>^\[[^\]]+\])"
+    $PropertyRegexp = '(?<Name>"?\w+"?)=(?<type>(dword|hex|hex\(2\)):)?(?<Value>"?[^"]*"?)'
+    $MultiLineRegexp = "(?<Value>^\s.+)"
+    Get-Content $FilePath | % {
+        $line = $_
+        $line = $line -replace $KeyRegexp, (New-Text '${Key}' -ForegroundColor $ConfigurationColors.SectionFrontColor).toString()
+        $line = $line -replace $PropertyRegexp, ((New-Text '${Name}' -ForegroundColor $ConfigurationColors.VariableFrontColor).toString() + '=' + (New-Text '${type}' -ForegroundColor $ConfigurationColors.SectionFrontColor).toString() + (New-Text '${Value}' -ForegroundColor $ConfigurationColors.ValueFrontColor).toString())
+        $line = $line -replace $MultiLineRegexp, (New-Text '${Value}' -ForegroundColor $ConfigurationColors.ValueFrontColor).toString()
+        $line
+    }
+}
 function New-UnderlineText {
     param(
         [string]$text
@@ -239,7 +262,7 @@ Export-ModuleMember -Function "Get-ColorizedContent" -Alias "ccat"
 ######################################################################
 # Analyze                                                            #
 ######################################################################
-# PSAvoidUsingCmdletAliases occured 17                               #
+# PSAvoidUsingCmdletAliases occured 18                               #
 # PSReviewUnusedParameter occured 1                                  #
 # PSUseShouldProcessForStateChangingFunctions occured 2              #
 ######################################################################
