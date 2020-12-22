@@ -11,6 +11,7 @@ Like oh-my-zsh colorize allow to have a colorized version of get-content. Curren
     - Windows SID
     - GuID
 - Ini and Inf Files
+- Citrix ICA Files
 - Microsoft Registry Files
 - Services and Hosts Files
 - Unix Config File with or without block
