@@ -13,6 +13,8 @@
 # TODO: Add Guess File content, file Type function                   # 
 # TODO: USe CmdLet Binding                                           # 
 # TODO: should add uri in path                                       # 
+# FIXME: Comment can be colorize with content highlighting FIXED/    #
+# TODO: Rename "IniColors" to ConfigurationColors                    #
 ######################################################################
 
 $CSVColors = @("Blue", "Green", "Red", "Yellow", "Orange")
@@ -26,7 +28,7 @@ $LogColors = @{
     GuIDFrontColor     = "DarkGreen"
     IPv4FrontColor     = "Orange"
 }
-$IniColors = @{
+$ConfigurationColors = @{
     CommentFrontColor  = "Blue"
     SectionFrontColor  = "Green"
     VariableFrontColor = "LightGreen"
@@ -59,8 +61,13 @@ function Get-ColorizedContent {
         return CsvColor -FilePath $File
     } elseif ( $File.Extension -eq '.log') {
         return LogColor -FilePath $File
-    } elseif ( $File.Extension -eq '.ini') {
+    } elseif ( $File.Extension -eq '.ini' -or $File.Extension -eq '.inf' -or $File.Extension -eq '.ica') {
         return IniColor -FilePath $File
+    } elseif ( $File.Extension -eq '.conf' -or $File.Extension -eq '.cfg') {
+        return ConfigFileColor -FilePath $File
+    } elseif ( $File.Extension -eq '.reg') {
+        return RegistryFileColor -FilePath $File
+    } elseif ($File.FullName -eq 'C:\WINDOWS\System32\drivers\etc\hosts') {
     } elseif ($File.FullName -eq 'C:\WINDOWS\System32\drivers\etc\hosts') {
         return HostColor -FilePath $File
     } elseif ($File.FullName -eq 'C:\WINDOWS\System32\drivers\etc\services') {
@@ -143,12 +150,12 @@ function IniColor {
     )
     $CommentRegexp = "(?<Comment>[#;].*)$"
     $SectionRegexp = "(?<Section>\[[^]]+\])"
-    $VariableValueRegexp = "(?<Variable>\w+\s?)=(?<Value>\s?[^;#]+)"
+    $VariableValueRegexp = "(?<Variable>[\w.*%$-]+\s*)=(?<Value>\s*[^;#]*)" #"(?<Variable>[\w+.\-*]\s*)=(?<Value>\s*[^;#]+)"
     Get-Content $FilePath | % {
         $line = $_
-        $line = $line -replace $CommentRegexp, (New-Text '${Comment}' -ForegroundColor $IniColors.CommentFrontColor).toString()
-        $line = $line -replace $SectionRegexp, (New-Text '${Section}' -ForegroundColor $IniColors.SectionFrontColor).toString()
-        $line = $line -replace $VariableValueRegexp, ((New-Text '${Variable}' -ForegroundColor $IniColors.VariableFrontColor).toString() + '=' + (New-Text '${Value}' -ForegroundColor $IniColors.ValueFrontColor).tostring() )
+        $line = $line -replace $CommentRegexp, (New-Text '${Comment}' -ForegroundColor $ConfigurationColors.CommentFrontColor).toString()
+        $line = $line -replace $SectionRegexp, (New-Text '${Section}' -ForegroundColor $ConfigurationColors.SectionFrontColor).toString()
+        $line = $line -replace $VariableValueRegexp, ((New-Text '${Variable}' -ForegroundColor $ConfigurationColors.VariableFrontColor).toString() + '=' + (New-Text '${Value}' -ForegroundColor $ConfigurationColors.ValueFrontColor).tostring() )
         $line
     }
 }
@@ -163,7 +170,7 @@ function HostColor {
         [string]$FilePath
     )
     $CommentRegexp = "(?<Comment>#.*$)"
-    $HostRegexp = "(?<IPV4>([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3})(?<Hostname>\s+.*)"
+    $HostRegexp = "(?<IPV4>^\s*([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3})(?<Hostname>\s+.*)"
     Get-Content $FilePath -Encoding UTF8 | % {
         $line = $_
         $line = $line -replace $CommentRegexp, (New-Text '${Comment}' -ForegroundColor $HostColors.CommentFrontColor).toString()
@@ -174,9 +181,9 @@ function HostColor {
     }
 }
 ######################################################################
-# function ServiceColor                                                 #
+# function ServiceColor                                              #
 ######################################################################
-# Description : Format Service File based on Inicolors Hash              # 
+# Description : Format Service File based on Inicolors Hash          # 
 ######################################################################
 function ServiceColor {
     param(
@@ -188,6 +195,52 @@ function ServiceColor {
         $line = $_
         $line = $line -replace $CommentRegexp, (New-Text '${Comment}' -ForegroundColor $HostColors.CommentFrontColor).toString()
         $line = $line -replace $ServiceRegexp, ((New-Text '${Service}' -ForegroundColor $HostColors.ServiceFrontColor).toString() + (New-Text '${Port}' -ForegroundColor $HostColors.PortFrontColor).toString() + (New-Text '${Proto}' -ForegroundColor $HostColors.ProtoFrontColor).toString() + (New-Text '${Alias}' -ForegroundColor $HostColors.AliasFrontColor).toString())
+        $line
+    }
+}
+
+######################################################################
+# function ConfigFileColor                                           #
+######################################################################
+# Description : Format Service File based on Inicolors Hash          # 
+######################################################################
+function ConfigFileColor {
+    param(
+        [string]$FilePath
+    ) 
+    $CommentRegexp = "(?<Comment>#.*)"
+    $SectionRegexp = "(?<Section>^\w+$)"
+    $AssignRegexp = "(?<Name>^\s*[\w-]+)(?<Value>\s+[^#]+)"
+    $BlockStartRegexp = "(?<Start>^\s*\w+\s*{)"
+    $BlockStopRegexp = "(?<Stop>})"
+    Get-Content $FilePath | % {
+        $line = $_
+        $line = $line -replace $CommentRegexp, (New-Text '${Comment}' -ForegroundColor $ConfigurationColors.CommentFrontColor).ToString()
+        $line = $line -replace $SectionRegexp, (New-Text '${Section}' -ForegroundColor $ConfigurationColors.SectionFrontColor).ToString()
+        $line = $line -replace $AssignRegexp, ((New-Text '${Name}' -ForegroundColor $ConfigurationColors.VariableFrontColor).ToString() + (New-Text '${Value}' -ForegroundColor $ConfigurationColors.ValueFrontColor).toString() )
+        $line = $line -replace $BlockStartRegexp, (New-Text '${Start}' -ForegroundColor $ConfigurationColors.SectionFrontColor).ToString()
+        $line = $line -replace $BlockStopRegexp, (New-Text '${Stop}' -ForegroundColor $ConfigurationColors.SectionFrontColor).ToString()
+        $line
+    }
+}
+
+######################################################################
+# function RegistryFileColor                                         #
+######################################################################
+# Description : Format Registry File based on Regcolors Hash         # 
+######################################################################
+function RegistryFileColor {
+    param(
+        [string]$FilePath
+    )
+    $KeyRegexp = "(?<Key>^\[[^\]]+\])"
+    $PropertyRegexp = '(?<Name>"?\w+"?)=(?<type>(dword|hex|hex\(2\)):)?(?<Value>"?[^"]*"?)'
+    $MultiLineRegexp = "(?<Value>^\s.+)"
+    Get-Content $FilePath | % {
+        $line = $_
+        $line = $line -replace $KeyRegexp, (New-Text '${Key}' -ForegroundColor $ConfigurationColors.SectionFrontColor).toString()
+        $line = $line -replace $PropertyRegexp, ((New-Text '${Name}' -ForegroundColor $ConfigurationColors.VariableFrontColor).toString() + '=' + (New-Text '${type}' -ForegroundColor $ConfigurationColors.SectionFrontColor).toString() + (New-Text '${Value}' -ForegroundColor $ConfigurationColors.ValueFrontColor).toString())
+        $line = $line -replace $MultiLineRegexp, (New-Text '${Value}' -ForegroundColor $ConfigurationColors.ValueFrontColor).toString()
         $line
     }
 }
@@ -209,7 +262,7 @@ Export-ModuleMember -Function "Get-ColorizedContent" -Alias "ccat"
 ######################################################################
 # Analyze                                                            #
 ######################################################################
-# PSAvoidUsingCmdletAliases occured 16                               #
+# PSAvoidUsingCmdletAliases occured 18                               #
 # PSReviewUnusedParameter occured 1                                  #
 # PSUseShouldProcessForStateChangingFunctions occured 2              #
 ######################################################################
