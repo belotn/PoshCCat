@@ -17,6 +17,10 @@
 # TODO: Rename "IniColors" to ConfigurationColors                    #
 ######################################################################
 
+######################################################################
+# Module Variables                                                   #
+######################################################################
+
 $CSVColors = @("Blue", "Green", "Red", "Yellow", "Orange")
 $CSVDelimColor = "Purple"
 $LogColors = @{
@@ -43,6 +47,10 @@ $HostColors = @{
     PortFrontColor    = "lightGreen"
     ProtoFrontColor   = "lightGreen"
 }
+
+######################################################################
+# Functions                                                          #
+######################################################################
 
 function Get-ColorizedContent {
     param(
@@ -163,7 +171,7 @@ function IniColor {
 ######################################################################
 # function HostColor                                                 #
 ######################################################################
-# Description : Format Host File based on Inicolors Hash              # 
+# Description : Format Host File based on Inicolors Hash             # 
 ######################################################################
 function HostColor {
     param(
@@ -244,12 +252,22 @@ function RegistryFileColor {
         $line
     }
 }
+######################################################################
+# function New-UnderlineText                                         #
+######################################################################
+# Description : Like PAnsies New-Text but to print underline one     #
+######################################################################
 function New-UnderlineText {
     param(
         [string]$text
     )
     return "$([char]27)[4m$text$([char]27)[24m"
 }
+######################################################################
+# function Set-CCarColor                                             #
+######################################################################
+# Description : Configure your own colors... to be written           #
+######################################################################
 
 function Set-CCarColor {
     param(
