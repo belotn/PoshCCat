@@ -17,6 +17,10 @@
 # TODO: Rename "IniColors" to ConfigurationColors                    #
 ######################################################################
 
+######################################################################
+# Module Variables                                                   #
+######################################################################
+
 $CSVColors = @("Blue", "Green", "Red", "Yellow", "Orange")
 $CSVDelimColor = "Purple"
 $LogColors = @{
@@ -44,9 +48,15 @@ $HostColors = @{
     ProtoFrontColor   = "lightGreen"
 }
 
+######################################################################
+# Functions                                                          #
+######################################################################
+
 function Get-ColorizedContent {
+    [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true,
+            ValueFromPipeline = $true)]
         [ValidateScript( {
                 if ( (Test-Path $_ | ? { $_ -ne $true } -GT 0)) {
                     Throw [System.IO.FileNotFoundException]
@@ -56,24 +66,25 @@ function Get-ColorizedContent {
             })]
         [string[]]$Path
     )
-    [System.IO.FileInfo]$File = (Resolve-Path  $Path).Path
-    if ($File.Extension -eq '.csv') {
-        return CsvColor -FilePath $File
-    } elseif ( $File.Extension -eq '.log') {
-        return LogColor -FilePath $File
-    } elseif ( $File.Extension -eq '.ini' -or $File.Extension -eq '.inf' -or $File.Extension -eq '.ica') {
-        return IniColor -FilePath $File
-    } elseif ( $File.Extension -eq '.conf' -or $File.Extension -eq '.cfg') {
-        return ConfigFileColor -FilePath $File
-    } elseif ( $File.Extension -eq '.reg') {
-        return RegistryFileColor -FilePath $File
-    } elseif ($File.FullName -eq 'C:\WINDOWS\System32\drivers\etc\hosts') {
-    } elseif ($File.FullName -eq 'C:\WINDOWS\System32\drivers\etc\hosts') {
-        return HostColor -FilePath $File
-    } elseif ($File.FullName -eq 'C:\WINDOWS\System32\drivers\etc\services') {
-        return ServiceColor -FilePath $File
-    } else {
-        return Get-Content -Path $File
+    process {
+        [System.IO.FileInfo]$File = (Resolve-Path  $Path).Path
+        if ($File.Extension -eq '.csv') {
+            return CsvColor -FilePath $File
+        } elseif ( $File.Extension -eq '.log') {
+            return LogColor -FilePath $File
+        } elseif ( $File.Extension -eq '.ini' -or $File.Extension -eq '.inf' -or $File.Extension -eq '.ica' -or $File.Extension -eq '.prf' -or $File.Extension -eq '.cmw') {
+            return IniColor -FilePath $File
+        } elseif ( $File.Extension -eq '.conf' -or $File.Extension -eq '.cfg') {
+            return ConfigFileColor -FilePath $File
+        } elseif ( $File.Extension -eq '.reg') {
+            return RegistryFileColor -FilePath $File
+        } elseif ($File.FullName -eq 'C:\WINDOWS\System32\drivers\etc\hosts') {
+            return HostColor -FilePath $File
+        } elseif ($File.FullName -eq 'C:\WINDOWS\System32\drivers\etc\services') {
+            return ServiceColor -FilePath $File
+        } else {
+            return Get-Content -Path $File
+        }
     }
 }
 
@@ -163,7 +174,7 @@ function IniColor {
 ######################################################################
 # function HostColor                                                 #
 ######################################################################
-# Description : Format Host File based on Inicolors Hash              # 
+# Description : Format Host File based on Inicolors Hash             # 
 ######################################################################
 function HostColor {
     param(
@@ -244,12 +255,22 @@ function RegistryFileColor {
         $line
     }
 }
+######################################################################
+# function New-UnderlineText                                         #
+######################################################################
+# Description : Like PAnsies New-Text but to print underline one     #
+######################################################################
 function New-UnderlineText {
     param(
         [string]$text
     )
     return "$([char]27)[4m$text$([char]27)[24m"
 }
+######################################################################
+# function Set-CCarColor                                             #
+######################################################################
+# Description : Configure your own colors... to be written           #
+######################################################################
 
 function Set-CCarColor {
     param(
