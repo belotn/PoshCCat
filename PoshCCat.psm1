@@ -69,7 +69,7 @@ function Get-ColorizedContent {
         return CsvColor -FilePath $File
     } elseif ( $File.Extension -eq '.log') {
         return LogColor -FilePath $File
-    } elseif ( $File.Extension -eq '.ini' -or $File.Extension -eq '.inf' -or $File.Extension -eq '.ica') {
+    } elseif ( $File.Extension -eq '.ini' -or $File.Extension -eq '.inf' -or $File.Extension -eq '.ica' -or $File.Extension -eq '.prf' ) {
         return IniColor -FilePath $File
     } elseif ( $File.Extension -eq '.conf' -or $File.Extension -eq '.cfg') {
         return ConfigFileColor -FilePath $File
