@@ -24,6 +24,7 @@ Like oh-my-zsh colorize allow to have a colorized version of get-content. Curren
 
 ## Changelog
 - 20201219 Initial Draft
+- 20201223 v0.0.1-beta
 
 
 ######################################################################
