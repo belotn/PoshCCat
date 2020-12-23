@@ -53,8 +53,10 @@ $HostColors = @{
 ######################################################################
 
 function Get-ColorizedContent {
+    [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true,
+            ValueFromPipeline = $true)]
         [ValidateScript( {
                 if ( (Test-Path $_ | ? { $_ -ne $true } -GT 0)) {
                     Throw [System.IO.FileNotFoundException]
@@ -64,23 +66,25 @@ function Get-ColorizedContent {
             })]
         [string[]]$Path
     )
-    [System.IO.FileInfo]$File = (Resolve-Path  $Path).Path
-    if ($File.Extension -eq '.csv') {
-        return CsvColor -FilePath $File
-    } elseif ( $File.Extension -eq '.log') {
-        return LogColor -FilePath $File
-    } elseif ( $File.Extension -eq '.ini' -or $File.Extension -eq '.inf' -or $File.Extension -eq '.ica' -or $File.Extension -eq '.prf' -or $File.Extension -eq '.cmw') {
-        return IniColor -FilePath $File
-    } elseif ( $File.Extension -eq '.conf' -or $File.Extension -eq '.cfg') {
-        return ConfigFileColor -FilePath $File
-    } elseif ( $File.Extension -eq '.reg') {
-        return RegistryFileColor -FilePath $File
-    } elseif ($File.FullName -eq 'C:\WINDOWS\System32\drivers\etc\hosts') {
-        return HostColor -FilePath $File
-    } elseif ($File.FullName -eq 'C:\WINDOWS\System32\drivers\etc\services') {
-        return ServiceColor -FilePath $File
-    } else {
-        return Get-Content -Path $File
+    process {
+        [System.IO.FileInfo]$File = (Resolve-Path  $Path).Path
+        if ($File.Extension -eq '.csv') {
+            return CsvColor -FilePath $File
+        } elseif ( $File.Extension -eq '.log') {
+            return LogColor -FilePath $File
+        } elseif ( $File.Extension -eq '.ini' -or $File.Extension -eq '.inf' -or $File.Extension -eq '.ica' -or $File.Extension -eq '.prf' -or $File.Extension -eq '.cmw') {
+            return IniColor -FilePath $File
+        } elseif ( $File.Extension -eq '.conf' -or $File.Extension -eq '.cfg') {
+            return ConfigFileColor -FilePath $File
+        } elseif ( $File.Extension -eq '.reg') {
+            return RegistryFileColor -FilePath $File
+        } elseif ($File.FullName -eq 'C:\WINDOWS\System32\drivers\etc\hosts') {
+            return HostColor -FilePath $File
+        } elseif ($File.FullName -eq 'C:\WINDOWS\System32\drivers\etc\services') {
+            return ServiceColor -FilePath $File
+        } else {
+            return Get-Content -Path $File
+        }
     }
 }
 
