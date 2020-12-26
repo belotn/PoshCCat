@@ -1,16 +1,17 @@
 TOPIC
-    about_<subject or module name>
+    about_PoshCcat
 
 SHORT DESCRIPTION
-    A short, one-line description of the topic contents.
+    A colorized version of cat / get-content
 
 LONG DESCRIPTION
     A detailed, full description of the subject or purpose of the module.
 
 EXAMPLES
-    Examples of how to use the module or how the subject feature works in practice.
+    Import-Module PoshCCat
+    Get-ColorizedContent -FilePath $env:windir\system32\drivers\etc\services
 
 KEYWORDS
-    Terms or titles on which you might expect your users to search for the information in this topic.
+    Color Get-Content Ccat cat colorized
 
 SEE ALSO
