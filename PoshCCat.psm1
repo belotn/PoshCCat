@@ -15,6 +15,7 @@
 # TODO: should add uri in path                                       # 
 # FIXME: Comment can be colorize with content highlighting FIXED/    #
 # TODO: Rename "IniColors" to ConfigurationColors                    #
+# TODO: Trace text parameters
 ######################################################################
 
 ######################################################################
