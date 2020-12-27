@@ -69,7 +69,7 @@ function Get-ColorizedContent {
             })]
         [string[]]$Path,
         [hashtable][ValidateScript( {
-                $(diff @($_.Keys) @('Object', 'BackgroundColor', 'ForegroundColor') -PassThru) -eq 0
+                $(diff @($_.Keys) @('Object', 'BackgroundColor', 'ForegroundColor') -PassThru).Count -eq 0
             }) ]$TraceText
     )
     process {
