@@ -17,6 +17,7 @@
 # TODO: Rename "IniColors" to ConfigurationColors                    #
 # TODO: Trace text parameters DONE/                                  #
 # TODO: TraceText HAsh Validation                                    #
+# TODO: TraceText should be first action                             #  
 ######################################################################
 
 ######################################################################
