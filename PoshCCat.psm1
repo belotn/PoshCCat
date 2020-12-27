@@ -87,6 +87,27 @@ function Get-ColorizedContent {
             return Get-Content -Path $File
         }
     }
+
+    <# 
+    .SYNOPSIS
+    Return coloriezd content of a file
+
+    .DESCRIPTION
+    Return a colorized version of a file, can be use as a pipeline. support formats "ini" and cfg unix    
+
+    .PARAMETER FilePath
+    Path of the file to be returned
+
+    .EXAMPLE
+    Get-ColorizedContent -FilePath $env:windir\system32\drivers\etc\services
+
+    .EXAMPLE
+    ccat $env:windir\system32\drivers\etc\services
+
+    .LINK
+    https://gitub.com/belotn/poshCCat
+
+#>
 }
 
 ######################################################################
