@@ -68,7 +68,9 @@ function Get-ColorizedContent {
                 }
             })]
         [string[]]$Path,
-        [hashtable]$TraceText
+        [hashtable][ValidateScript( {
+                $(diff @($_.Keys) @('Object', 'BackgroundColor', 'ForegroundColor') -PassThru) -eq 0
+            }) ]$TraceText
     )
     process {
         [System.IO.FileInfo]$File = (Resolve-Path  $Path).Path
@@ -330,7 +332,7 @@ Export-ModuleMember -Function "Get-ColorizedContent" -Alias "ccat"
 ######################################################################
 # Analyze                                                            #
 ######################################################################
-# PSAvoidUsingCmdletAliases occured 19                               #
+# PSAvoidUsingCmdletAliases occured 20                               #
 # PSReviewUnusedParameter occured 2                                  #
 # PSUseShouldProcessForStateChangingFunctions occured 2              #
 ######################################################################
