@@ -18,6 +18,7 @@
 # TODO: Trace text parameters DONE/                                  #
 # TODO: TraceText HAsh Validation                                    #
 # TODO: TraceText should be first action                             #  
+# FIXME: CSV can start with comment FIXED/                           # 
 ######################################################################
 
 ######################################################################
@@ -131,7 +132,7 @@ function CsvColor {
         [string]$FilePath
     )
     $MaxColor = $CSVColors.Count
-    $Delimiter = ((Get-Content -Path $FilePath)[0].ToCharArray() | group | ? { ":", ";", ",", "`t" -contains $_.Name } | sort Count | select -First 1 ).Name
+    $Delimiter = ((Get-Content -Path $FilePath | ? { $_ -notlike '#*' })[0].ToCharArray() | group | ? { ":", ";", ",", "`t" -contains $_.Name } | sort Count | select -First 1 ).Name
     $csv = Import-Csv -delim $Delimiter -Path $FilePath 
     #header
     $i = 0
@@ -332,7 +333,7 @@ Export-ModuleMember -Function "Get-ColorizedContent" -Alias "ccat"
 ######################################################################
 # Analyze                                                            #
 ######################################################################
-# PSAvoidUsingCmdletAliases occured 20                               #
+# PSAvoidUsingCmdletAliases occured 21                               #
 # PSReviewUnusedParameter occured 2                                  #
 # PSUseShouldProcessForStateChangingFunctions occured 2              #
 ######################################################################
