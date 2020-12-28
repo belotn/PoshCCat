@@ -74,7 +74,7 @@ function Get-ColorizedContent {
             }) ]$TraceText
     )
     process {
-        [System.IO.FileInfo]$File = (Resolve-Path  $Path).Path
+        [System.IO.FileInfo]$File = Convert-Path (Resolve-Path  $Path).Path
         $return = @()
         if ($File.Extension -eq '.csv') {
             $return = CsvColor -FilePath $File
