@@ -1,0 +1,17 @@
+TOPIC
+    about_PoshCcat
+
+SHORT DESCRIPTION
+    A colorized version of cat / get-content
+
+LONG DESCRIPTION
+    As in Zshell, a coloried version of cat / get-content. We can highligth ini, inf, ica, prf and reg files ; hosts and services ; log files, generic unix file ;
+
+EXAMPLES
+    Import-Module PoshCCat
+    Get-ColorizedContent -FilePath $env:windir\system32\drivers\etc\services
+
+KEYWORDS
+    Color Get-Content Ccat cat colorized
+
+SEE ALSO

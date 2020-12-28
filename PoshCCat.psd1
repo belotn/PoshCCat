@@ -12,7 +12,7 @@
     RootModule        = 'PoshCCat.psm1'
 
     # Numéro de version de ce module.
-    ModuleVersion     = '0.0.1'
+    ModuleVersion     = '0.0.2'
 
     # Éditions PS prises en charge
     # CompatiblePSEditions = @()

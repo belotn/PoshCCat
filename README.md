@@ -23,8 +23,11 @@ Like oh-my-zsh colorize allow to have a colorized version of get-content. Curren
 `ccat Path/to/file`
 
 ## Changelog
-- 20201219 Initial Draft
+- 20201228 v0.0.2-beta
+    * Error when csv start with a comment
+    * Error when trying to access file on a share
 - 20201223 v0.0.1-beta
+- 20201219 Initial Draft
 
 
 ######################################################################

@@ -11,10 +11,14 @@
 # Note / TODO and FIXME                                              #
 # TODO: Guess delimiter in CsvColor function DONE/                   #
 # TODO: Add Guess File content, file Type function                   # 
-# TODO: USe CmdLet Binding                                           # 
+# TODO: USe CmdLet Binding DONE/ (Almost)                            # 
 # TODO: should add uri in path                                       # 
 # FIXME: Comment can be colorize with content highlighting FIXED/    #
 # TODO: Rename "IniColors" to ConfigurationColors                    #
+# TODO: Trace text parameters DONE/                                  #
+# TODO: TraceText HAsh Validation                                    #
+# TODO: TraceText should be first action                             #  
+# FIXME: CSV can start with comment FIXED/                           # 
 ######################################################################
 
 ######################################################################
@@ -64,28 +68,57 @@ function Get-ColorizedContent {
                     return $true
                 }
             })]
-        [string[]]$Path
+        [string[]]$Path,
+        [hashtable][ValidateScript( {
+                $(diff @($_.Keys) @('Object', 'BackgroundColor', 'ForegroundColor') -PassThru).Count -eq 0
+            }) ]$TraceText
     )
     process {
-        [System.IO.FileInfo]$File = (Resolve-Path  $Path).Path
+        [System.IO.FileInfo]$File = Convert-Path (Resolve-Path  $Path).Path
+        $return = @()
         if ($File.Extension -eq '.csv') {
-            return CsvColor -FilePath $File
+            $return = CsvColor -FilePath $File
         } elseif ( $File.Extension -eq '.log') {
-            return LogColor -FilePath $File
+            $return = LogColor -FilePath $File
         } elseif ( $File.Extension -eq '.ini' -or $File.Extension -eq '.inf' -or $File.Extension -eq '.ica' -or $File.Extension -eq '.prf' -or $File.Extension -eq '.cmw') {
-            return IniColor -FilePath $File
+            $return = IniColor -FilePath $File
         } elseif ( $File.Extension -eq '.conf' -or $File.Extension -eq '.cfg') {
-            return ConfigFileColor -FilePath $File
+            $return = ConfigFileColor -FilePath $File
         } elseif ( $File.Extension -eq '.reg') {
-            return RegistryFileColor -FilePath $File
+            $return = RegistryFileColor -FilePath $File
         } elseif ($File.FullName -eq 'C:\WINDOWS\System32\drivers\etc\hosts') {
-            return HostColor -FilePath $File
+            $return = HostColor -FilePath $File
         } elseif ($File.FullName -eq 'C:\WINDOWS\System32\drivers\etc\services') {
-            return ServiceColor -FilePath $File
+            $return = ServiceColor -FilePath $File
         } else {
-            return Get-Content -Path $File
+            $return = Get-Content -Path $File
         }
+        if ($TraceText) {
+            $return = TraceText $return $TraceText
+        }
+        return $return
     }
+
+    <# 
+    .SYNOPSIS
+    Return coloriezd content of a file
+
+    .DESCRIPTION
+    Return a colorized version of a file, can be use as a pipeline. support formats "ini" and cfg unix    
+
+    .PARAMETER FilePath
+    Path of the file to be returned
+
+    .EXAMPLE
+    Get-ColorizedContent -FilePath $env:windir\system32\drivers\etc\services
+
+    .EXAMPLE
+    ccat $env:windir\system32\drivers\etc\services
+
+    .LINK
+    https://gitub.com/belotn/poshCCat
+
+#>
 }
 
 ######################################################################
@@ -99,7 +132,7 @@ function CsvColor {
         [string]$FilePath
     )
     $MaxColor = $CSVColors.Count
-    $Delimiter = ((Get-Content -Path $FilePath)[0].ToCharArray() | group | ? { ":", ";", ",", "`t" -contains $_.Name } | sort Count | select -First 1 ).Name
+    $Delimiter = ((Get-Content -Path $FilePath | ? { $_ -notlike '#*' })[0].ToCharArray() | group | ? { ":", ";", ",", "`t" -contains $_.Name } | sort Count | select -First 1 ).Name
     $csv = Import-Csv -delim $Delimiter -Path $FilePath 
     #header
     $i = 0
@@ -267,6 +300,23 @@ function New-UnderlineText {
     return "$([char]27)[4m$text$([char]27)[24m"
 }
 ######################################################################
+# function TraceText                                                 #
+######################################################################
+# Description : Highligth some keyword                               #
+######################################################################
+
+function TraceText {
+    param(
+        [string[]]$Content,
+        [hashtable]$TraceText
+    )
+    $return = $Content | % {
+        $_ -replace $TraceText.Object, (New-Text @TraceText).toString()
+    }
+    $return
+}
+
+######################################################################
 # function Set-CCarColor                                             #
 ######################################################################
 # Description : Configure your own colors... to be written           #
@@ -283,8 +333,8 @@ Export-ModuleMember -Function "Get-ColorizedContent" -Alias "ccat"
 ######################################################################
 # Analyze                                                            #
 ######################################################################
-# PSAvoidUsingCmdletAliases occured 18                               #
-# PSReviewUnusedParameter occured 1                                  #
+# PSAvoidUsingCmdletAliases occured 21                               #
+# PSReviewUnusedParameter occured 2                                  #
 # PSUseShouldProcessForStateChangingFunctions occured 2              #
 ######################################################################
 
