@@ -95,7 +95,7 @@
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags       = @('PSEdition_Desktop', 'Windows')
+            Tags       = @('PSEdition_Desktop', 'Windows', 'Module')
 
             # A URL to the license for this module.
             LicenseUri = 'https://github.com/belotn/PoshCCat/blob/main/LICENSE'
@@ -117,7 +117,7 @@
     } # End of PrivateData hashtable
 
     # URI HelpInfo de ce module
-    HelpInfoURI       = 'https://github.com/belotn/PoshCCat#readme'
+    HelpInfoURI       = 'https://github.com/belotn/PoshCCat/blob/main/README.md'
 
     # Le préfixe par défaut des commandes a été exporté à partir de ce module. Remplacez le préfixe par défaut à l’aide d’Import-Module -Prefix.
     # DefaultCommandPrefix = ''
