@@ -1,3 +1,4 @@
+![PoshCcat](https://img.shields.io/powershellgallery/v/PoshCCat.svg?include_prerelease "0.0.2")
 # PoshCCat
 ## Description
 Like oh-my-zsh colorize allow to have a colorized version of get-content. Currently, we can colorize CSV File and LogFiles.
@@ -16,6 +17,12 @@ Like oh-my-zsh colorize allow to have a colorized version of get-content. Curren
 - Microsoft Registry Files
 - Services and Hosts Files
 - Unix Config File with or without block
+
+## Installation
+
+Copy and Paste the following command to install this package using PowerShellGet
+
+`Install-Module -Name PoshCCat`
 
 ## usage
 

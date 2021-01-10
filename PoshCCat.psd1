@@ -69,7 +69,7 @@
     # NestedModules = @()
 
     # Fonctions à exporter à partir de ce module. Pour de meilleures performances, n’utilisez pas de caractères génériques et ne supprimez pas l’entrée. Utilisez un tableau vide si vous n’avez aucune fonction à exporter.
-    FunctionsToExport = 'Get-ColorizedContent'
+    FunctionsToExport = 'Get-ColorizedContent', 'Set-CcatColors', 'Get-CcatColors'
 
     # Applets de commande à exporter à partir de ce module. Pour de meilleures performances, n’utilisez pas de caractères génériques et ne supprimez pas l’entrée. Utilisez un tableau vide si vous n’avez aucune applet de commande à exporter.
     CmdletsToExport   = @()
@@ -95,10 +95,10 @@
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            # Tags = @()
+            Tags       = @('PSEdition_Desktop', 'Windows', 'Module')
 
             # A URL to the license for this module.
-            # LicenseUri = ''
+            LicenseUri = 'https://github.com/belotn/PoshCCat/blob/main/LICENSE'
 
             # A URL to the main website for this project.
             ProjectUri = 'https://github.com/belotn/PoshCCat'
@@ -117,7 +117,7 @@
     } # End of PrivateData hashtable
 
     # URI HelpInfo de ce module
-    # HelpInfoURI = ''
+    HelpInfoURI       = 'https://github.com/belotn/PoshCCat/blob/main/README.md'
 
     # Le préfixe par défaut des commandes a été exporté à partir de ce module. Remplacez le préfixe par défaut à l’aide d’Import-Module -Prefix.
     # DefaultCommandPrefix = ''

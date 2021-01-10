@@ -51,6 +51,34 @@ $HostColors = @{
     PortFrontColor    = "lightGreen"
     ProtoFrontColor   = "lightGreen"
 }
+$CCatColors = @{
+    CSV                 = @("Blue", "Green", "Red", "Yellow", "Orange")
+    CSVDelimColor       = "Purple"
+    LogColors           = @{
+        DateTimeFrontColor = "Blue"
+        ErrorFrontColor    = "Red"
+        WarningFrontColor  = "Yellow"
+        HexWordFrontColor  = "Green"
+        SIDFrontColor      = "LightGreen"
+        GuIDFrontColor     = "DarkGreen"
+        IPv4FrontColor     = "Orange"
+    }
+    ConfigurationColors = @{
+        CommentFrontColor  = "Blue"
+        SectionFrontColor  = "Green"
+        VariableFrontColor = "LightGreen"
+        ValueFrontColor    = "darkOrange"
+    }
+    HostColors          = @{
+        CommentFrontColor = "Blue"
+        IpV4FrontColor    = "LightGreen"
+        HostFrontColor    = "darkOrange"
+        ServiceFrontColor = "darkorange"
+        AliasFrontColor   = "darkORange"
+        PortFrontColor    = "lightGreen"
+        ProtoFrontColor   = "lightGreen"
+    }
+}
 
 ######################################################################
 # Functions                                                          #
@@ -131,6 +159,8 @@ function CsvColor {
     param(
         [string]$FilePath
     )
+    $CSVColors = $CCatColors.CSV
+    $CSVDelimColor = $CCatColors.CSVDelim
     $MaxColor = $CSVColors.Count
     $Delimiter = ((Get-Content -Path $FilePath | ? { $_ -notlike '#*' })[0].ToCharArray() | group | ? { ":", ";", ",", "`t" -contains $_.Name } | sort Count | select -First 1 ).Name
     $csv = Import-Csv -delim $Delimiter -Path $FilePath 
@@ -153,6 +183,7 @@ function LogColor {
     param(
         [string]$FilePath
     )
+    $LogColors = $CCatColors.LogColors
     $DateRegexp = "(\d{1,2}[/\- ]\d{1,2}[/\- ]\d{2,4}|20\d{6}|\d{2,4}[/\- ]\d{1,2}[/\- ]\d{1,2}|\d{2}-\w{3}-\d{4})"
     $TimeRegexp = "(\d{1,2}[:]\d{1,2}[:]\d{1,2}\.?\d*)"
     $HexWordRegexp = "(?<HexWord>0x[0-9a-eA-E]{4,8})"
@@ -192,6 +223,7 @@ function IniColor {
     param(
         [string]$FilePath
     )
+    $ConfigurationColors = $CCatColors.ConfigurationColors
     $CommentRegexp = "(?<Comment>[#;].*)$"
     $SectionRegexp = "(?<Section>\[[^]]+\])"
     $VariableValueRegexp = "(?<Variable>[\w.*%$-]+\s*)=(?<Value>\s*[^;#]*)" #"(?<Variable>[\w+.\-*]\s*)=(?<Value>\s*[^;#]+)"
@@ -213,6 +245,7 @@ function HostColor {
     param(
         [string]$FilePath
     )
+    $HostColors = $CCatColors.HostColors
     $CommentRegexp = "(?<Comment>#.*$)"
     $HostRegexp = "(?<IPV4>^\s*([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3})(?<Hostname>\s+.*)"
     Get-Content $FilePath -Encoding UTF8 | % {
@@ -233,6 +266,7 @@ function ServiceColor {
     param(
         [string]$FilePath
     )
+    $HostColors = $CCatColors.HostColors
     $ServiceRegexp = "(?<Service>[\w\-]+\s+)(?<Port>\d+)(?<Proto>/(tcp|udp))(?<Alias>\s*[\w \-]*)"
     $CommentRegexp = "(?<Comment>#.*$)"
     Get-Content $FilePath -Encoding UTF8 | % {
@@ -252,6 +286,7 @@ function ConfigFileColor {
     param(
         [string]$FilePath
     ) 
+    $ConfigurationColors = $CCatColors.ConfigurationColors 
     $CommentRegexp = "(?<Comment>#.*)"
     $SectionRegexp = "(?<Section>^\w+$)"
     $AssignRegexp = "(?<Name>^\s*[\w-]+)(?<Value>\s+[^#]+)"
@@ -277,6 +312,7 @@ function RegistryFileColor {
     param(
         [string]$FilePath
     )
+    $ConfigurationColors = $CCatColors.ConfigurationColors 
     $KeyRegexp = "(?<Key>^\[[^\]]+\])"
     $PropertyRegexp = '(?<Name>"?\w+"?)=(?<type>(dword|hex|hex\(2\)):)?(?<Value>"?[^"]*"?)'
     $MultiLineRegexp = "(?<Value>^\s.+)"
@@ -322,19 +358,39 @@ function TraceText {
 # Description : Configure your own colors... to be written           #
 ######################################################################
 
-function Set-CCarColor {
+function Set-CCatColors {
     param(
         [string[]]$CSVColors
     )
+    if ($CSVColors) {
+        $CCatColors.CSV = $CSVColors
+    }
+    if ($CSVDelimColor) {
+        $CCatColors.CSVDelimColor = $CSVDelimColor
+    }
+    if ($ConfigurationColors) {
+        $CCatColors.ConfigurationColors = $ConfigurationColors
+    }
+    if ($LogColors) {
+        $CCatColors.LogColors = $LogColors
+    }
+    if ($HostColors) {
+        $CCatColors.HostColors = $HostColors
+    }
+}
+
+function Get-CcatColors {
+    $CcatColors
 }
 Set-Alias -Name "ccat" -Value "Get-ColorizedContent"
-Export-ModuleMember -Function "Get-ColorizedContent" -Alias "ccat"
+Export-ModuleMember -Function "Get-ColorizedContent", "Set-CcatColors", "Get-CcatColors" -Alias "ccat"
 
 ######################################################################
 # Analyze                                                            #
 ######################################################################
 # PSAvoidUsingCmdletAliases occured 21                               #
-# PSReviewUnusedParameter occured 2                                  #
+# PSReviewUnusedParameter occured 1                                  #
 # PSUseShouldProcessForStateChangingFunctions occured 2              #
+# PSUseSingularNouns occured 2                                       #
 ######################################################################
 
