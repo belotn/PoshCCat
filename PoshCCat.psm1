@@ -358,7 +358,7 @@ function TraceText {
 # Description : Configure your own colors... to be written           #
 ######################################################################
 
-function Set-CCatColor {
+function Set-CCatColors {
     param(
         [string[]]$CSVColors
     )
@@ -379,11 +379,11 @@ function Set-CCatColor {
     }
 }
 
-function Get-CcatColor {
+function Get-CcatColors {
     $CcatColors
 }
 Set-Alias -Name "ccat" -Value "Get-ColorizedContent"
-Export-ModuleMember -Function "Get-ColorizedContent", "Set-CcatColor", "Get-CcatColor" -Alias "ccat"
+Export-ModuleMember -Function "Get-ColorizedContent", "Set-CcatColors", "Get-CcatColors" -Alias "ccat"
 
 ######################################################################
 # Analyze                                                            #
@@ -391,5 +391,6 @@ Export-ModuleMember -Function "Get-ColorizedContent", "Set-CcatColor", "Get-Ccat
 # PSAvoidUsingCmdletAliases occured 21                               #
 # PSReviewUnusedParameter occured 1                                  #
 # PSUseShouldProcessForStateChangingFunctions occured 2              #
+# PSUseSingularNouns occured 2                                       #
 ######################################################################
 
