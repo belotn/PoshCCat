@@ -383,7 +383,7 @@ function Get-CcatColor {
     $CcatColors
 }
 Set-Alias -Name "ccat" -Value "Get-ColorizedContent"
-Export-ModuleMember -Function "Get-ColorizedContent" -Alias "ccat"
+Export-ModuleMember -Function "Get-ColorizedContent", "Set-CcatColor", "Get-CcatColor" -Alias "ccat"
 
 ######################################################################
 # Analyze                                                            #
