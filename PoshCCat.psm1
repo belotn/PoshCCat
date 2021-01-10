@@ -358,7 +358,7 @@ function TraceText {
 # Description : Configure your own colors... to be written           #
 ######################################################################
 
-function Set-CCarColor {
+function Set-CCatColor {
     param(
         [string[]]$CSVColors
     )
@@ -377,6 +377,10 @@ function Set-CCarColor {
     if ($HostColors) {
         $CCatColors.HostColors = $HostColors
     }
+}
+
+function Get-CcatColor {
+    $CcatColors
 }
 Set-Alias -Name "ccat" -Value "Get-ColorizedContent"
 Export-ModuleMember -Function "Get-ColorizedContent" -Alias "ccat"
