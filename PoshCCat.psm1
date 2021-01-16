@@ -10,14 +10,14 @@
 ######################################################################
 # Note / TODO and FIXME                                              #
 # TODO: Guess delimiter in CsvColor function DONE/                   #
-# TODO: Add Guess File content, file Type function                   # 
+# ? TODO: Add Guess File content, file Type function                 # 
 # TODO: USe CmdLet Binding DONE/ (Almost)                            # 
 # TODO: should add uri in path                                       # 
 # FIXME: Comment can be colorize with content highlighting FIXED/    #
-# TODO: Rename "IniColors" to ConfigurationColors                    #
+# TODO: Rename "IniColors" to ConfigurationColors DONE/              #
 # TODO: Trace text parameters DONE/                                  #
-# TODO: TraceText HAsh Validation                                    #
-# TODO: TraceText should be first action                             #  
+# ! TODO: TraceText HAsh Validation                                  #
+# ! TODO: TraceText should be first action                           #  
 # FIXME: CSV can start with comment FIXED/                           # 
 ######################################################################
 
