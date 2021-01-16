@@ -25,32 +25,32 @@
 # Module Variables                                                   #
 ######################################################################
 
-$CSVColors = @("Blue", "Green", "Red", "Yellow", "Orange")
-$CSVDelimColor = "Purple"
-$LogColors = @{
-    DateTimeFrontColor = "Blue"
-    ErrorFrontColor    = "Red"
-    WarningFrontColor  = "Yellow"
-    HexWordFrontColor  = "Green"
-    SIDFrontColor      = "LightGreen"
-    GuIDFrontColor     = "DarkGreen"
-    IPv4FrontColor     = "Orange"
-}
-$ConfigurationColors = @{
-    CommentFrontColor  = "Blue"
-    SectionFrontColor  = "Green"
-    VariableFrontColor = "LightGreen"
-    ValueFrontColor    = "darkOrange"
-}
-$HostColors = @{
-    CommentFrontColor = "Blue"
-    IpV4FrontColor    = "LightGreen"
-    HostFrontColor    = "darkOrange"
-    ServiceFrontColor = "darkorange"
-    AliasFrontColor   = "darkORange"
-    PortFrontColor    = "lightGreen"
-    ProtoFrontColor   = "lightGreen"
-}
+#$CSVColors = @("Blue", "Green", "Red", "Yellow", "Orange")
+#$CSVDelimColor = "Purple"
+#$LogColors = @{
+#    DateTimeFrontColor = "Blue"
+#    ErrorFrontColor    = "Red"
+#    WarningFrontColor  = "Yellow"
+#    HexWordFrontColor  = "Green"
+#    SIDFrontColor      = "LightGreen"
+#    GuIDFrontColor     = "DarkGreen"
+#    IPv4FrontColor     = "Orange"
+#}
+#$ConfigurationColors = @{
+#    CommentFrontColor  = "Blue"
+#    SectionFrontColor  = "Green"
+#    VariableFrontColor = "LightGreen"
+#    ValueFrontColor    = "darkOrange"
+#}
+#$HostColors = @{
+#    CommentFrontColor = "Blue"
+#    IpV4FrontColor    = "LightGreen"
+#    HostFrontColor    = "darkOrange"
+#    ServiceFrontColor = "darkorange"
+#    AliasFrontColor   = "darkORange"
+#    PortFrontColor    = "lightGreen"
+#    ProtoFrontColor   = "lightGreen"
+#}
 $CCatColors = @{
     CSV                 = @("Blue", "Green", "Red", "Yellow", "Orange")
     CSVDelimColor       = "Purple"
