@@ -6,7 +6,7 @@
 #                                                                    #  
 ######################################################################
 # Changelog :                                                        # 
-# 20201218 Initial realease                                          # 
+# 20201218 Initial release                                          # 
 ######################################################################
 # Note / TODO and FIXME                                              #
 # TODO: Guess delimiter in CsvColor function DONE/                   #
@@ -46,8 +46,8 @@
 #    CommentFrontColor = "Blue"
 #    IpV4FrontColor    = "LightGreen"
 #    HostFrontColor    = "darkOrange"
-#    ServiceFrontColor = "darkorange"
-#    AliasFrontColor   = "darkORange"
+#    ServiceFrontColor = "darkOrange"
+#    AliasFrontColor   = "darkOrange"
 #    PortFrontColor    = "lightGreen"
 #    ProtoFrontColor   = "lightGreen"
 #}
@@ -73,7 +73,7 @@ $CCatColors = @{
         CommentFrontColor = "Blue"
         IpV4FrontColor    = "LightGreen"
         HostFrontColor    = "darkOrange"
-        ServiceFrontColor = "darkorange"
+        ServiceFrontColor = "darkOrange"
         AliasFrontColor   = "darkORange"
         PortFrontColor    = "lightGreen"
         ProtoFrontColor   = "lightGreen"
@@ -129,7 +129,7 @@ function Get-ColorizedContent {
 
     <# 
     .SYNOPSIS
-    Return coloriezd content of a file
+    Return colorized content of a file
 
     .DESCRIPTION
     Return a colorized version of a file, can be use as a pipeline. support formats "ini" and cfg unix    
@@ -166,17 +166,17 @@ function CsvColor {
     $csv = Import-Csv -delim $Delimiter -Path $FilePath 
     #header
     $i = 0
-    @($csv[0].psobject.Properties.Name | % { $i++; New-Text $_ -ForegroundColor $CSVColors[$i % $MaxColor] -LeaveColor } ) -join (New-Text $Delimiter  -ForegroundColor $CSVDelimColori -LeaveColor)
+    @($csv[0].PSObject.Properties.Name | % { $i++; New-Text $_ -ForegroundColor $CSVColors[$i % $MaxColor] -LeaveColor } ) -join (New-Text $Delimiter  -ForegroundColor $CSVDelimColori -LeaveColor)
     $csv | % {
         $i = 0
-        @($_.psobject.Properties.Value | % { $i++; New-Text $_ -ForegroundColor $CSVColors[$i % $MaxColor] -LeaveColor } ) -join (New-Text $Delimiter -ForegroundColor $CSVDelimColor -LeaveColor)
+        @($_.PSObject.Properties.Value | % { $i++; New-Text $_ -ForegroundColor $CSVColors[$i % $MaxColor] -LeaveColor } ) -join (New-Text $Delimiter -ForegroundColor $CSVDelimColor -LeaveColor)
     }
 }
 
 ######################################################################
 # function LogColor                                                  #
 ######################################################################
-# Description : Format Log File based on Logcolors Hash              # 
+# Description : Format Log File based on LogColors Hash              # 
 ######################################################################
 
 function LogColor {
@@ -209,14 +209,14 @@ function LogColor {
         $line = $line -replace $GuIDRegex, (New-Text '${GUID}' -ForegroundColor $logColors.GuIDFrontColor )
         $line = $line -replace $IPv4Regex, (New-Text '${IPV4}' -ForegroundColor $logColors.IPv4FrontColor )
         $line = $line -replace "(?<Match>Error)", (New-Text '${Match}' -ForegroundColor $LogColors.ErrorFrontColor ).toString()
-        $line = $line -replace "(?<Match>Warning)", (New-Text '${Match}' -ForegroundColor $Logcolors.WarningFrontColor ).toString()
+        $line = $line -replace "(?<Match>Warning)", (New-Text '${Match}' -ForegroundColor $LogColors.WarningFrontColor ).toString()
         $line
     }
 }
 ######################################################################
 # function IniColor                                                  #
 ######################################################################
-# Description : Format Ini File based on Inicolors Hash              # 
+# Description : Format Ini File based on IniColors Hash              # 
 ######################################################################
 
 function IniColor {
@@ -239,7 +239,7 @@ function IniColor {
 ######################################################################
 # function HostColor                                                 #
 ######################################################################
-# Description : Format Host File based on Inicolors Hash             # 
+# Description : Format Host File based on HostColors Hash            # 
 ######################################################################
 function HostColor {
     param(
@@ -260,7 +260,7 @@ function HostColor {
 ######################################################################
 # function ServiceColor                                              #
 ######################################################################
-# Description : Format Service File based on Inicolors Hash          # 
+# Description : Format Service File based on HostColors Hash         # 
 ######################################################################
 function ServiceColor {
     param(
@@ -280,7 +280,7 @@ function ServiceColor {
 ######################################################################
 # function ConfigFileColor                                           #
 ######################################################################
-# Description : Format Service File based on Inicolors Hash          # 
+# Description : Format Service File based on ConfigurationColors Hash# 
 ######################################################################
 function ConfigFileColor {
     param(
@@ -306,7 +306,7 @@ function ConfigFileColor {
 ######################################################################
 # function RegistryFileColor                                         #
 ######################################################################
-# Description : Format Registry File based on Regcolors Hash         # 
+# Description : Format Registry File based on RegColors Hash         # 
 ######################################################################
 function RegistryFileColor {
     param(
@@ -327,7 +327,7 @@ function RegistryFileColor {
 ######################################################################
 # function New-UnderlineText                                         #
 ######################################################################
-# Description : Like PAnsies New-Text but to print underline one     #
+# Description : Like Pansies New-Text but to print underline one     #
 ######################################################################
 function New-UnderlineText {
     param(
@@ -338,7 +338,7 @@ function New-UnderlineText {
 ######################################################################
 # function TraceText                                                 #
 ######################################################################
-# Description : Highligth some keyword                               #
+# Description : Highlight some keyword                               #
 ######################################################################
 
 function TraceText {
